@@ -33,8 +33,8 @@ class Card:
 
         import random
         pile = random.randint(0, 6)
-        self._x = 100 + pile*50
-        self._y = len(piles[pile])*20 + 70
+        self.x = 100 + pile*50
+        self.y = len(piles[pile])*20 + 70
         piles[pile].append(self)
 
     def get_value(self):
@@ -50,7 +50,7 @@ class Card:
 
     def get_suit(self):
         symbols = {"hearts":"♥", "diamonds":"♦", "spades":"♠", "clubs":"♣"}
-        return symbols[self.__suit]
+        return symbols[self._suit]
 
     def __lt__(self, other):
         return self._y < other._y
