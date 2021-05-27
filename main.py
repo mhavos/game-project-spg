@@ -1,10 +1,12 @@
 import tkinter
+from PIL import ImageTk, Image
+import card as cardclass
 
 class Drawer:
     def __init__(self):
         # initialize tkinter window/canvas manager
-        self.__window = tkinter.Tk("Klondike")
-        self.__canvas = tkinter.Canvas(self.__window, width=500, height=400, bg="green")
+        self.__window = tkinter.Tk("Patience")
+        self.__canvas = tkinter.Canvas(self.__window, width=984, height=1000, bg="green")
         self.__canvas.pack()
 
     def start(self):
@@ -16,51 +18,37 @@ class Drawer:
         for card in cards:
             # insert image at x, y
             # temporary rectangle drawer
-            x, y = card._x, card._y
-            w, h = 45, 70
-            if card._revealed:
-                self.__canvas.create_rectangle(x - w/2, y - h/2, x + w/2, y + h/2, fill=card.get_color_name(), outline="white")
-                self.__canvas.create_text(x, y - h/3, text="{1}{0}".format(card.get_value(), card.get_suit()), fill="white")
+            x, y = card.x, card.y
+            w, h = 112, 175
+            if True: #card._revealed:
+                self.__canvas.create_image(x, y, anchor="center", image=images[card.get_suit()][card.get_rank()-1])
             else:
                 self.__canvas.create_rectangle(x - w/2, y - h/2, x + w/2, y + h/2, fill="steel blue", outline="white")
-
-class Card:
-    # toto je tu len kvoli testovaniu kodu, skutocne to chce asi vyzerat inak
-    def __init__(self, value, suit, revealed=True):
-        self.__value = value
-        self.__suit = suit
-        self._revealed = revealed
-
-        import random
-        pile = random.randint(0, 6)
-        self.x = 100 + pile*50
-        self.y = len(piles[pile])*20 + 70
-        piles[pile].append(self)
-
-    def get_value(self):
-        return self.__value
-
-    def get_color_name(self):
-        if self.__suit in ("hearts", "diamonds"):
-            return "red"
-        elif self.__suit in ("spades", "clubs"):
-            return "black"
-        else:
-            return None
-
-    def get_suit(self):
-        symbols = {"hearts":"♥", "diamonds":"♦", "spades":"♠", "clubs":"♣"}
-        return symbols[self._suit]
-
-    def __lt__(self, other):
-        return self._y < other._y
 
 def random_cards():
     import random
     l = []
-    for value in ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]:
+    for rank in list(range(1, 14)):
         for suit in ["hearts", "diamonds", "spades", "clubs"]:
-            l.append(Card(value, suit, revealed=random.choice([True, False])))
+            card = cardclass.Card(suit=suit, rank=rank, location=None, revealed=False)
+            # x = (pile + 1/2)*200
+            # y = len(piles[pile])*80 + 150
+            l.append(cardclass.TableauCard(card, 0, 0))
+    random.shuffle(l)
+    start = 0
+    current = 0
+    for i in range(len(l)):
+        if current == 7:
+            start += 1
+            current = start
+            if current == 7:
+                break
+        l[i].x = (current)*137 + 82
+        l[i].y = len(piles[current])*40 + 150
+        piles[current].append(l[i])
+        current += 1
+    for pile in piles:
+        pile[-1].reveal()
     return l
 
 piles = []
@@ -68,4 +56,10 @@ for i in range(7):
     piles.append([])
 
 drawer = Drawer()
+images = {}
+for suit in ["clubs", "diamonds", "hearts", "spades"]:
+    images[suit] = []
+    for rank in ["a"] + list(range(1, 13)):
+        images[suit].append(ImageTk.PhotoImage(Image.open("assets/{}{}.png".format(suit[0], rank))))
 drawer.draw(random_cards())
+drawer.start()

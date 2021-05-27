@@ -7,9 +7,9 @@ class Card:
         self.child = None
 
     def get_suit(self):
-        return self._symbol
-    def set_suit(self, symbol):
-        self._symbol = symbol
+        return self._suit
+    def set_suit(self, suit):
+        self._suit = suit
 
     def get_rank(self):
         return self._rank
@@ -31,6 +31,7 @@ class TableauCard(Card):
         suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
         super().__init__(suit, rank, location, revealed)
         card.child = self
+        self.parent = card
         self.x = x
         self.y = y
 
@@ -42,9 +43,9 @@ class TableauCard(Card):
         else:
             return None
 
-    def get_suit(self): # idk why i put this here
+    def get_symbol(self): # idk why i put this here
         symbols = {"hearts":"♥", "diamonds":"♦", "spades":"♠", "clubs":"♣"}
         return symbols[self._suit]
 
     def __lt__(self, other): # this is so that the drawer can sort the cards (so that they stack properly)
-        return self._y < other._y
+        return self.y < other.y
