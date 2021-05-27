@@ -25,6 +25,8 @@ class Card:
         return self._revealed
     def reveal(self, revealed=True):
         self._revealed = revealed
+    def hide(self, revealed=False):
+        self._revealed = revealed
 
 class TableauCard(Card):
     def __init__(self, card, x, y):
