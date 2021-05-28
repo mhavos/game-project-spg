@@ -14,8 +14,8 @@ class Game:
 
     def move_card(self, card, stack):
         stack.push(card)
-        card.set_location(stack)
         card._location.pop()
+        card.set_location(stack)
 
     def deck_to_waste(self):
         # turn a card over from deck to waste
@@ -27,8 +27,8 @@ class Game:
         # remove all cards from the waste pile and put them back inside the deck
         for i in range(self._deck.get_length()):
             self._deck.push(self._waste.top)
-            self._waste.pop()
             self._deck.top.hide()
+            self._waste.pop()
 
     def list_valid_moves(self, card):
         valid_moves = []
@@ -37,11 +37,15 @@ class Game:
             # if your card is an ace - there is a guaranteed empty spot, or if your card matches in suit and is 1 larger
             if card.get_rank() == 1 or (self._foundations[i].top.get_suit() == card.get_suit() and self._foundations[i].top.get_rank() == card.get_rank() + 1):
                 if self._foundations[i].get_length() < 13:
-                    valid_moves.append(self._foundations[i])
-                    break
+                    if self._foundations[i] != card._location:
+                        valid_moves.append(self._foundations[i])
+                        break
+
         # check available tableau spots
         for j in range(7):
             if (card.get_rank() == 13 and not self._tableaus[j].top) or (card.get_color_name() != self._tableaus[j].top.get_color_name() and self._tableaus[j].top.get_rank == card.get_rank() - 1):
                 if self._tableaus[j].get_length() < 13:
-                    valid_moves.append(self._tableaus[j])
-                    break
+                    if self._tableaus[j] != card._location:
+                        valid_moves.append(self._tableaus[j])
+                        break
+        return valid_moves
