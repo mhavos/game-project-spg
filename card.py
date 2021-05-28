@@ -21,22 +21,6 @@ class Card:
     def set_location(self, location):
         self._location = location
 
-    def is_revealed(self):
-        return self._revealed
-    def reveal(self, revealed=True):
-        self._revealed = revealed
-    def hide(self, revealed=False):
-        self._revealed = revealed
-
-class TableauCard(Card):
-    def __init__(self, card, x, y):
-        suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
-        super().__init__(suit, rank, location, revealed)
-        card.child = self
-        self.parent = card
-        self.x = x
-        self.y = y
-
     def get_color_name(self): # determine color based on the suit
         if self._suit in ("hearts", "diamonds"):
             return "red"
@@ -45,9 +29,45 @@ class TableauCard(Card):
         else:
             return None
 
-    def get_symbol(self): # idk why i put this here
-        symbols = {"hearts":"♥", "diamonds":"♦", "spades":"♠", "clubs":"♣"}
-        return symbols[self._suit]
+    def is_revealed(self):
+        return self._revealed
+    def reveal(self, revealed=True):
+        self._revealed = revealed
+    def hide(self, revealed=False):
+        self._revealed = revealed
 
-    def __lt__(self, other): # this is so that the drawer can sort the cards (so that they stack properly)
-        return self.y < other.y
+class TableauCard(Card):
+    def __init__(self, card, tableau_index, tableau_depth):
+        suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
+        super().__init__(suit, rank, location, revealed)
+        card.child = self
+        self.parent = card
+        self.x = tableau_index*(25 + 112.5) + 25 + 112.5/2
+        self.y = tableau_depth*40 + 2*25 + 3/2*175
+
+class DeckCard(Card):
+    def __init__(self, card, deck_depth):
+        suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
+        super().__init__(suit, rank, location, revealed)
+        card.child = self
+        self.parent = card
+        self.x = deck_depth*0 + 25 + 112.5/2
+        self.y = - deck_depth*1 + 25 + 1/2*175
+
+class WasteCard(Card):
+    def __init__(self, card, waste_depth):
+        suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
+        super().__init__(suit, rank, location, revealed)
+        card.child = self
+        self.parent = card
+        self.x = waste_depth*0 + 2*25 + 3/2 * 112.5
+        self.y = - waste_depth*1 + 25 + 1/2*175
+
+class FoundationCard(Card):
+    def __init__(self, card, foundation_index, foundation_depth):
+        suit, rank, location, revealed = card.get_suit(), card.get_rank(), card.get_location(), card.is_revealed()
+        super().__init__(suit, rank, location, revealed)
+        card.child = self
+        self.parent = card
+        self.x = foundation_index*(25 + 112.5) + 4*25 + 7/2 * 112.5
+        self.y = - foundation_depth*1 + 25 + 1/2*175
