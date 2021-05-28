@@ -2,6 +2,7 @@ from stack import Stack
 
 class Game:
     def __init__(self):
+        # create the piles as stacks
         self._deck = Stack()
         self._waste = Stack()
         self._foundations = []
@@ -17,11 +18,13 @@ class Game:
         card._location.pop()
 
     def deck_to_waste(self):
+        # turn a card over from deck to waste
         self._waste.push(self._deck.top)
         self._deck.pop()
         self._waste.top.reveal()
 
     def reset_deck(self):
+        # remove all cards from the waste pile and put them back inside the deck
         for i in range(self._deck.get_length()):
             self._deck.push(self._waste.top)
             self._waste.pop()

@@ -37,7 +37,7 @@ class TableauCard(Card):
         self.x = x
         self.y = y
 
-    def get_color_name(self):
+    def get_color_name(self): # determine color based on the suit
         if self._suit in ("hearts", "diamonds"):
             return "red"
         elif self._suit in ("spades", "clubs"):

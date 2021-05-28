@@ -1,6 +1,7 @@
 import tkinter
 from PIL import ImageTk, Image
 import card as cardclass
+import game
 
 class Drawer:
     def __init__(self):
@@ -64,23 +65,22 @@ def random_cards():
             if current == 7:
                 break
         l[i].x = (current)*138 + 25 + 112.5/2
-        l[i].y = len(piles[current])*40 + 2*25 + 3/2*175
-        piles[current].append(l[i])
+        l[i].y = tableaus[current].get_length()*40 + 2*25 + 3/2*175
+        tableaus[current].push(l[i])
         current += 1
-    for pile in piles:
-        pile[-1].reveal()
+    for pile in tableaus:
+        pile.top.reveal()
     a = i
     for i in range(i, len(l)):
-        l[i].x = len(deck)*12 + 25 + 112.5/2
+        l[i].x = deck.get_length()*12 + 25 + 112.5/2
         l[i].y = 25 + 1/2*175
-        deck.append(l[i])
-    deck[-1].reveal()
+        deck.push(l[i])
+    deck.top.reveal()
     return l[:a], l[a:]
 
-piles = []
-for i in range(7):
-    piles.append([])
-deck = []
+game1 = game.Game()
+tableaus = game1._tableaus
+deck = game1._deck
 
 drawer = Drawer()
 
