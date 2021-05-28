@@ -6,12 +6,15 @@ class Drawer:
     def __init__(self):
         # initialize tkinter window/canvas manager
         self.__window = tkinter.Tk("Patience")
-        self.__canvas = tkinter.Canvas(self.__window, width=984, height=1000, bg="#319331")
+        self.__canvas = tkinter.Canvas(self.__window, width=984, height=1000, bg="#008000")
         self.__canvas.pack()
 
     def prep_board(self):
-        for coords in [[81.25, 0], [219.25, 0], [357.25, 0], [495.25, 0], [633.25, 0], [771.25, 0], [909.25, 0]]:
-            self.__canvas.create_image(coords[0], 25 + 1/2*175, anchor="center", image=emptypile)
+        for coords in [ [81.25, 112.5], [219.25, 112.5], [495.25, 112.5, "h"], [633.25, 112.5, "s"], [771.25, 112.5, "d"], [909.25, 112.5, "c"],
+                        [81.25, 312.5], [219.25, 312.5], [357.25, 312.5], [495.25, 312.5], [633.25, 312.5], [771.25, 312.5], [909.25, 312.5] ]:
+            self.__canvas.create_image(coords[0], coords[1], anchor="center", image=emptypile)
+            if len(coords) == 3:
+                self.__canvas.create_image(coords[0], coords[1], anchor="center", image=empties[coords[2]])
 
     def start(self):
         self.__window.mainloop()
@@ -90,6 +93,7 @@ cardback = ImageTk.PhotoImage(Image.open("assets/cardback.png"))
 vshadow = ImageTk.PhotoImage(Image.open("assets/vshadow.png"))
 hshadow = ImageTk.PhotoImage(Image.open("assets/hshadow.png"))
 emptypile = ImageTk.PhotoImage(Image.open("assets/empty.png"))
+empties = {suit:ImageTk.PhotoImage(Image.open("assets/empty{}.png".format(suit))) for suit in "cdhs"}
 
 v, h = random_cards()
 drawer.prep_board()
