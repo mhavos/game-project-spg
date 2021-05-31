@@ -37,9 +37,11 @@ class Stack:
     def get_length(self):
         return self._length
 
+    # len(self) is identical to self.get_length()
     def __len__(self):
         return self._length
 
+    # allows stack indexing: mystack[i]
     def __getitem__(self, i):
         if i >= self._length:
             raise IndexError()
@@ -49,6 +51,7 @@ class Stack:
             current = current.next
         return current.content
 
+    # allows to use stack in for statement: for card in mystack
     def __iter__(self):
         l = []
         current = self.__top
