@@ -3,18 +3,14 @@ class Card:
         self._suit = suit
         self._rank = rank
         self._location = location
-        self._revealed = revealed #which side faces up ? idk how to name it
+        self._revealed = revealed #which side faces up
         self.child = None
 
     def get_suit(self):
         return self._suit
-    def set_suit(self, suit):
-        self._suit = suit
 
     def get_rank(self):
         return self._rank
-    def set_rank(self, rank):
-        self._rank = rank
 
     def get_location(self):
         return self._location

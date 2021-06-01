@@ -2,7 +2,7 @@ class Stack:
     class Container:
         def __init__(self, content=None, next=None):
             self.content = content
-            self.next = None
+            self.next = next
 
     def __init__(self, name=None):
         self.__top = None
@@ -17,13 +17,14 @@ class Stack:
             return False
 
     def push(self, card):
-        container = Stack.Container(card, next=self.top)
+        container = Stack.Container(card, next=self.__top)
         self.__top = container
         self.top = self.__top.content
         self._length += 1
 
     def pop(self):
         if self.is_empty():
+            raise IndexError
             return None
         content = self.__top.content
         self.__top = self.__top.next
@@ -35,10 +36,6 @@ class Stack:
         return content
 
     def get_length(self):
-        return self._length
-
-    # len(self) is identical to self.get_length()
-    def __len__(self):
         return self._length
 
     # allows stack indexing: mystack[i]
