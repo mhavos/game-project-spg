@@ -17,7 +17,8 @@ class Game:
         self.__drawer = Drawer(self)
         v, h = self.shuffle()
         self.__drawer.prep_board()
-        self.__drawer.draw(v)
+        self.__drawer.draw(v[:7], shadow=None)
+        self.__drawer.draw(v[7:])
         self.__drawer.draw(h, shadow=None)
         self.__drawer.start()
 

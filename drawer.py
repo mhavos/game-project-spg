@@ -32,6 +32,7 @@ class Drawer:
                 return
 
             first = True
+            shadow = None
             for card in self.__holding:
                 self.delete([card])
                 if first:
@@ -39,7 +40,8 @@ class Drawer:
                     newcard = cardclass.HoldingCard(card, event.x, event.y + self._card_height/2 - 20)
                 else:
                     newcard = cardclass.HoldingCard(card, event.x, newcard.y + 40)
-                self.draw([newcard])
+                self.draw([newcard], shadow=shadow)
+                shadow = 0
 
         # začiatok potiahnutia karty
         def mouse_down(event):
@@ -147,6 +149,7 @@ class Drawer:
     def drop(self, destination, destination_type=None, j=None):
         if self.__holding == None:
             return
+        shadow = 0
         while not self.__holding.is_empty():
             source = self.__holding[0].get_location()
             current = self.__holding.pop()
@@ -156,8 +159,11 @@ class Drawer:
                 j = destination.get_length()
                 current = cardclass.FoundationCard(current.parent, i, j)
                 current.reveal()
+                shadow = None
             elif destination_type == "tableau":
                 i = self.__game._tableaus.index(destination)
+                if not i:
+                    shadow = None
                 j = destination.get_length()
                 current = cardclass.TableauCard(current.parent, i, j)
                 current.reveal()
@@ -165,13 +171,15 @@ class Drawer:
                 j = destination.get_length()
                 current = cardclass.WasteCard(current.parent, j)
                 current.reveal()
+                shadow = None
             elif not destination_type:
                 pass
             elif destination_type == "deck":
                 current = cardclass.DeckCard(current.parent, j)
                 current.hide()
+                shadow = None
             current.set_location(destination)
-            self.draw([current])
+            self.draw([current], shadow=shadow)
             destination.push(current)
 
             self.__game.check_win()
