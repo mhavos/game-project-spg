@@ -27,6 +27,20 @@ class Drawer:
 
         photos()
 
+        def motion(event):
+            if self.__holding == None:
+                return
+
+            first = True
+            for card in self.__holding:
+                self.delete([card])
+                if first:
+                    first = False
+                    newcard = cardclass.HoldingCard(card, event.x, event.y + self._card_height/2 - 20)
+                else:
+                    newcard = cardclass.HoldingCard(card, event.x, newcard.y + 40)
+                self.draw([newcard])
+
         # začiatok potiahnutia karty
         def mouse_down(event):
             x, y = event.x, event.y
@@ -55,6 +69,7 @@ class Drawer:
                     if j >= l:
                         j = l - 1
                     self.pick_up(self.__game._tableaus[i][j])
+            motion(event)
 
         # pustenie myši
         def mouse_up(event):
@@ -106,13 +121,16 @@ class Drawer:
         self.__canvas.bind("<ButtonPress-1>", mouse_down)
         self.__canvas.bind("<ButtonRelease-1>", mouse_up)
 
+        self.__canvas.bind("<B1-Motion>", motion)
+
     # take the card and everything on top of it
     def pick_up(self, card):
         # there should not be any cards left over in the player hand
         if self.__holding:
             raise Exception("This action would cause one or multiple cards to duplicate or vanish.")
 
-
+        if card == None:
+            return
         if card.get_location() != self.__game._deck and not card.is_revealed():
             return
 
