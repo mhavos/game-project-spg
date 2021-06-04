@@ -1,0 +1,22 @@
+Pravidlá hry
+
+Po začatí novej hry sa karty rozdajú do ôsmych kôpok, a ostane päť prázdnych políčok.
+
+V ľavom hornom rohu sa nachádza Deck, kde sú uložené všetky prebytočné karty.
+
+Napravo od nej sa nachádza Waste, na ktorý môžeme prevracať karty z Decku, a potom nimi manipulovať.
+Kliknutím na Deck prevrátime jeho vrchnú kartu do Waste.
+Keď sa Deck minie, resetneme ho kliknutím na jeho prázdne políčko.
+
+Rad siedmych políčok sa nazýva Tableau.
+Môžeme naň posúvať karty z iných kôpok alebo navzájom medzi Tableau kôpkami
+Môžeme posúvať karty na jednotlivé kôpky, ak:
+    1. Naša karta je Kráľ, a chceme ju položiť na prázdne políčko
+    2. Naša karta je o 1 menšia a inej farby ako tá, na ktorú ju chceme položiť
+
+V pravom hornom rohu sú 4 políčka pre Foundations.
+Môžeme na ne umiestňovať karty, ak:
+    1. Naša karta je Eso, a chceme ju položiť na prázdne políčko
+    2. Naša karta je o 1 väčšia a rovnaký znak ako tá, na ktorú ju chceme položiť
+
+Cieľom hry je zaplniť všetky Foundations.
