@@ -6,6 +6,7 @@ menu_window = tkinter.Tk()
 menu_window.title("Menu")
 
 def start():
+    menu_window.destroy()
     game1 = Game()
 
 def open_rules():
