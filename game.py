@@ -78,6 +78,9 @@ class Game:
 
     def list_valid_moves(self, card):
         valid_moves = []
+        if not card:
+            return valid_moves
+
         # check available foundation spots
         for i in range(4):
             # if your card is an ace - there is a guaranteed empty spot, or if your card matches in suit and is 1 larger
@@ -88,9 +91,8 @@ class Game:
             # foundations can be built up by suits
             elif self._foundations[i].top.get_suit() == card.get_suit() and self._foundations[i].top.get_rank() == card.get_rank() - 1:
                 if self._foundations[i].get_length() < 13:
-                    if self._foundations[i] != card._location:
-                        valid_moves.append(self._foundations[i])
-                        break
+                    valid_moves.append(self._foundations[i])
+                    break
 
         # check available tableau spots
         for j in range(7):
@@ -101,6 +103,5 @@ class Game:
             # tableaus can be built down in alternating colors
             elif card.get_color_name() != self._tableaus[j].top.get_color_name() and self._tableaus[j].top.get_rank() == card.get_rank() + 1:
                 if self._tableaus[j].get_length() < 13:
-                    if self._tableaus[j] != card._location:
-                        valid_moves.append(self._tableaus[j])
+                    valid_moves.append(self._tableaus[j])
         return valid_moves

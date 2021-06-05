@@ -58,6 +58,8 @@ class Drawer:
                     if x%(25 + self._card_width) > self._card_width:
                         return
                     i = int(x//(25 + self._card_width))
+                    if i > 6:
+                        return
                     self.pick_up(self.__game._foundations[i].top)
             # if click begins in  the tableau area
             elif 25 + (25 + self._card_height) < y and 25 < x:
@@ -65,6 +67,8 @@ class Drawer:
                 if x%(25 + self._card_width) > self._card_width:
                     return
                 i = int(x//(25 + self._card_width))
+                if i > 6:
+                    return
                 j = (y - 25 - (25 + self._card_height))//40
                 l = self.__game._tableaus[i].get_length()
                 if j < l + 3:
@@ -95,6 +99,8 @@ class Drawer:
                 elif 25 + 3*(25 + self._card_width) < x < 7*(25 + self._card_width) and self.__holding != None:
                     if x%(25 + self._card_width) <= self._card_width:
                         i = int((x - 25 - 3*(25 + self._card_width))//(25 + self._card_width))
+                        if i > 6:
+                            return
                         if self.__game._foundations[i] in self.__valid_moves and self.__holding.get_length() == 1:
                             self.drop(self.__game._foundations[i], "foundation")
                             return
@@ -103,6 +109,8 @@ class Drawer:
                 x = x - 25
                 if x%(25 + self._card_width) <= self._card_width:
                     i = int(x//(25 + self._card_width))
+                    if i > 6:
+                        return
                     if self.__holding != None:
                         if self.__game._tableaus[i] in self.__valid_moves:
                             self.drop(self.__game._tableaus[i], "tableau")
@@ -117,7 +125,7 @@ class Drawer:
                                     self.move(self.__game._tableaus[i].top, self.__game._foundations[k], "foundation")
             # if cards are not placed in a suitable spot, they return to where they came from
             if self.__holding:
-                self.drop(self.__holding[0]._location, None)
+                self.drop(self.__holding[0]._location, self.__holding[0]._type)
 
         # canvas events
         self.__canvas.bind("<ButtonPress-1>", mouse_down)
@@ -145,14 +153,30 @@ class Drawer:
             self.delete(current)
         self.__valid_moves = self.__game.list_valid_moves(card)
 
+        self.delete("valid_moves")
+        for move in self.__valid_moves:
+            if move.top:
+                x, y = move.top.x, move.top.y
+            elif move in self.__game._foundations:
+                if self.__holding.get_length() > 1:
+                    continue
+                x, y = [[495.25, 112.5], [633.25, 112.5], [771.25, 112.5], [909.25, 112.5]][self.__game._foundations.index(move)]
+            elif move in self.__game._tableaus:
+                x, y = [[81.25, 312.5], [219.25, 312.5], [357.25, 312.5], [495.25, 312.5], [633.25, 312.5], [771.25, 312.5], [909.25, 312.5]][self.__game._tableaus.index(move)]
+            else:
+                x, y = 0, 0
+            self.__canvas.create_image(x, y, anchor="center", image=validmove, tag="valid_moves")
+
     # place the contents of the hand at the destination
     def drop(self, destination, destination_type=None, j=None):
+        source_type = None
         if self.__holding == None:
             return
         shadow = 0
         while not self.__holding.is_empty():
             source = self.__holding[0].get_location()
             current = self.__holding.pop()
+            source_type = current._type
             # vytvor správny objekt (objekt ukladá pozíciu karty)
             if destination_type == "foundation":
                 i = self.__game._foundations.index(destination)
@@ -162,9 +186,9 @@ class Drawer:
                 shadow = None
             elif destination_type == "tableau":
                 i = self.__game._tableaus.index(destination)
-                if not i:
-                    shadow = None
                 j = destination.get_length()
+                if not j:
+                    shadow = None
                 current = cardclass.TableauCard(current.parent, i, j)
                 current.reveal()
             elif destination_type == "waste":
@@ -181,16 +205,21 @@ class Drawer:
             current.set_location(destination)
             self.draw([current], shadow=shadow)
             destination.push(current)
-
-            self.__game.check_win()
+            shadow = 0
 
         # vyprázdni ruku
         self.__holding = None
-        if source.top:
+        if source.top and source_type != "deck":
             source.top.reveal()
-            if destination_type != "waste":
+            if source != destination and source_type != "waste":
                 self.delete([source.top])
-                self.draw([source.top])
+                shadow = 0
+                if source.get_length() == 1:
+                    shadow = None
+                self.draw([source.top], shadow=shadow)
+
+        self.delete("valid_moves")
+        self.__game.check_win()
 
     # zloženie funkcií pick_up a drop
     def move(self, card, destination, type=None):
@@ -223,10 +252,12 @@ class Drawer:
             w, h = 112.5, 175
             if True and card._revealed:
                 # lícom nahor
+                self.__canvas.create_image(x, y, anchor="center", image=pileshadow, tag=tag)
                 self.__canvas.create_image(x, y, anchor="center", image=shadow, tag=tag)
                 self.__canvas.create_image(x, y, anchor="center", image=images[card.get_suit()][card.get_rank()], tag=tag)
             else:
                 # rubom nahor
+                self.__canvas.create_image(x, y, anchor="center", image=pileshadow, tag=tag)
                 self.__canvas.create_image(x, y, anchor="center", image=shadow, tag=tag)
                 self.__canvas.create_image(x, y, anchor="center", image=cardback, tag=tag)
 
@@ -242,7 +273,7 @@ class Drawer:
             self.__canvas.delete(name)
 
 def photos():
-    global images, cardback, vshadow, hshadow, emptypile, empties
+    global images, cardback, vshadow, hshadow, pileshadow, emptypile, empties, validmove
     # načítaj obrázky kariet
     # v images sa karty nachádzajú v nasledujúcom tvare: images["spades"][12] == queen of spades
     images = {}
@@ -256,7 +287,9 @@ def photos():
     # tiene (idú pod kartu aby boli vidno hranice medzi kartami)
     vshadow = ImageTk.PhotoImage(Image.open("assets/vshadow.png"))
     hshadow = ImageTk.PhotoImage(Image.open("assets/hshadow.png"))
+    pileshadow = ImageTk.PhotoImage(Image.open("assets/pileshadow.png"))
     # grafika prázdnych kôpok
     emptypile = ImageTk.PhotoImage(Image.open("assets/empty.png"))
     empties = {suit:ImageTk.PhotoImage(Image.open("assets/empty{}.png".format(suit))) for suit in "cdhs"}
-
+    # povolené ťahy
+    validmove = ImageTk.PhotoImage(Image.open("assets/valid_move.png"))

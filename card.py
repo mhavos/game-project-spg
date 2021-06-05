@@ -40,6 +40,7 @@ class TableauCard(Card):
         self.parent = card
         self.x = tableau_index*(25 + 112.5) + 25 + 112.5/2
         self.y = tableau_depth*40 + 2*25 + 3/2*175
+        self._type = "tableau"
 
 class DeckCard(Card):
     def __init__(self, card, deck_depth):
@@ -49,6 +50,7 @@ class DeckCard(Card):
         self.parent = card
         self.x = deck_depth*0 + 25 + 112.5/2
         self.y = - deck_depth*1 + 25 + 1/2*175
+        self._type = "deck"
 
 class WasteCard(Card):
     def __init__(self, card, waste_depth):
@@ -58,6 +60,7 @@ class WasteCard(Card):
         self.parent = card
         self.x = waste_depth*0 + 2*25 + 3/2 * 112.5
         self.y = - waste_depth*1 + 25 + 1/2*175
+        self._type = "waste"
 
 class FoundationCard(Card):
     def __init__(self, card, foundation_index, foundation_depth):
@@ -67,6 +70,7 @@ class FoundationCard(Card):
         self.parent = card
         self.x = foundation_index*(25 + 112.5) + 4*25 + 7/2 * 112.5
         self.y = - foundation_depth*1 + 25 + 1/2*175
+        self._type = "foundation"
 
 class HoldingCard(Card):
     def __init__(self, card, x, y):
@@ -75,3 +79,4 @@ class HoldingCard(Card):
         self.parent = card
         self.x = x
         self.y = y
+        self._type = "holding"
