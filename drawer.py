@@ -1,7 +1,6 @@
 import tkinter
 from PIL import ImageTk, Image
 import card as cardclass
-import game
 import stack
 
 class Drawer:
@@ -13,6 +12,7 @@ class Drawer:
         self.__window = tkinter.Tk("Patience")
         self.__window.title("Patience")
         self.__window.iconbitmap('./assets/spades.ico')
+        self.__window.resizable(False, False)
 
         # card and canvas settings
         self._card_width, self._card_height = 112.5, 175
@@ -26,6 +26,13 @@ class Drawer:
         self.__valid_moves = []
 
         photos()
+
+        def back_to_menu():
+            self.__window.destroy()
+            import main
+            main.menu()
+        menu_button = tkinter.Button(self.__window, text="Back to Menu", bg="#008000", width=14,  command=lambda: back_to_menu())
+        menu_button.place(x=358, y=180, anchor="center")
 
         def motion(event):
             if self.__holding == None:
@@ -219,7 +226,10 @@ class Drawer:
                 self.draw([source.top], shadow=shadow)
 
         self.delete("valid_moves")
-        self.__game.check_win()
+        # vyhra
+        if self.__game.check_win():
+            self.__canvas.create_text(self._width/2, 600, anchor="center", font=("Courier", 50, 'bold'), text="gg you've won")
+
 
     # zloženie funkcií pick_up a drop
     def move(self, card, destination, type=None):
