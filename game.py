@@ -20,7 +20,19 @@ class Game:
         self.__drawer.draw(v[:7], shadow=None)
         self.__drawer.draw(v[7:])
         self.__drawer.draw(h, shadow=None)
+        self.start()
+
+    def start(self):
         self.__drawer.start()
+
+    def init_drawer(self):
+        self.__drawer.__init__(self)
+        self.__drawer.prep_board()
+        for pilegroup in [self._tableaus, self._foundations, [self._deck], [self._waste]]:
+            for pile in pilegroup:
+                l = list(pile)
+                l.reverse()
+                self.__drawer.draw(l)
 
     def shuffle(self):
         import random

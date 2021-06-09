@@ -81,7 +81,8 @@ class Drawer:
                 if j < l + 3:
                     if j >= l:
                         j = l - 1
-                    self.pick_up(self.__game._tableaus[i][j])
+                    if self.__game._tableaus[i].get_length():
+                        self.pick_up(self.__game._tableaus[i][j])
             motion(event)
 
         # pustenie myši
@@ -162,16 +163,17 @@ class Drawer:
 
         self.delete("valid_moves")
         for move in self.__valid_moves:
-            if move.top:
-                x, y = move.top.x, move.top.y
-            elif move in self.__game._foundations:
+            if move in self.__game._foundations:
                 if self.__holding.get_length() > 1:
                     continue
                 x, y = [[495.25, 112.5], [633.25, 112.5], [771.25, 112.5], [909.25, 112.5]][self.__game._foundations.index(move)]
             elif move in self.__game._tableaus:
-                x, y = [[81.25, 312.5], [219.25, 312.5], [357.25, 312.5], [495.25, 312.5], [633.25, 312.5], [771.25, 312.5], [909.25, 312.5]][self.__game._tableaus.index(move)]
+                x, y = [[81.25, 312.5], [219.25, 312.5], [357.25, 312.5], [495.25, 312.5], [633.25, 312.5],
+                        [771.25, 312.5], [909.25, 312.5]][self.__game._tableaus.index(move)]
             else:
                 x, y = 0, 0
+            if move.top:
+                x, y = move.top.x, move.top.y
             self.__canvas.create_image(x, y, anchor="center", image=validmove, tag="valid_moves")
 
     # place the contents of the hand at the destination
