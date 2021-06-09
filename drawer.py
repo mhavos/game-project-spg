@@ -27,11 +27,11 @@ class Drawer:
 
         photos()
 
-        def back_to_menu():
+        def back_to_menu(saved_game):
             self.__window.destroy()
-            import main
-            main.menu()
-        menu_button = tkinter.Button(self.__window, text="Back to Menu", bg="#008000", width=14,  command=lambda: back_to_menu())
+            from main import menu
+            menu(saved_game)
+        menu_button = tkinter.Button(self.__window, text="Back to Menu", bg="#008000", width=14,  command=lambda: back_to_menu(self.__game))
         menu_button.place(x=358, y=180, anchor="center")
 
         def motion(event):
