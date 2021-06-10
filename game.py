@@ -114,6 +114,8 @@ class Game:
                     valid_moves.append(self._tableaus[j])
             # tableaus can be built down in alternating colors
             elif card.get_color_name() != self._tableaus[j].top.get_color_name() and self._tableaus[j].top.get_rank() == card.get_rank() + 1:
+                # upper limit for cards on a single foundation - so that they don't go off-screen
                 if self._tableaus[j].get_length() < 13:
-                    valid_moves.append(self._tableaus[j])
+                    if self._tableaus[j].top.is_revealed():
+                        valid_moves.append(self._tableaus[j])
         return valid_moves
