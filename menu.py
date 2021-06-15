@@ -45,7 +45,6 @@ def save_game(saved):
     menu()
 
 def load_game():
-    print(os.listdir())
     with open("gamesave.bin", "rb") as file:
         saved = pickle.load(file)
     game3 = Game()
