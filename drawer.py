@@ -29,8 +29,14 @@ class Drawer:
 
         def back_to_menu(saved_game):
             self.__window.destroy()
-            from main import menu
-            menu(saved_game)
+            import menu as m
+            import os
+            if self.__game.check_win():
+                if "gamesave.bin" in os.listdir():
+                    os.remove("gamesave.bin")
+                m.menu()
+            else:
+                m.save_game(saved_game)
         menu_button = tkinter.Button(self.__window, text="Back to Menu", bg="#008000", width=14,  command=lambda: back_to_menu(self.__game))
         menu_button.place(x=358, y=180, anchor="center")
 
@@ -230,7 +236,8 @@ class Drawer:
         self.delete("valid_moves")
         # vyhra
         if self.__game.check_win():
-            self.__canvas.create_text(self._width/2, 600, anchor="center", font=("Courier", 50, 'bold'), text="gg you've won")
+            self.__canvas.create_text(self._width/2, 600, anchor="center", font=("Courier", 50, 'bold'), text="you've won\nbut at what cost")
+
 
 
     # zloženie funkcií pick_up a drop

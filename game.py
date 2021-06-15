@@ -14,25 +14,26 @@ class Game:
         for _ in range(7):
             self._tableaus.append(Stack())
 
-        self.__drawer = Drawer(self)
+        self._drawer = Drawer(self)
+
+    def init(self):
         v, h = self.shuffle()
-        self.__drawer.prep_board()
-        self.__drawer.draw(v[:7], shadow=None)
-        self.__drawer.draw(v[7:])
-        self.__drawer.draw(h, shadow=None)
-        self.start()
+        self._drawer.prep_board()
+        self._drawer.draw(v[:7], shadow=None)
+        self._drawer.draw(v[7:])
+        self._drawer.draw(h, shadow=None)
 
     def start(self):
-        self.__drawer.start()
+        self._drawer.start()
 
     def init_drawer(self):
-        self.__drawer.__init__(self)
-        self.__drawer.prep_board()
+        # self._drawer.__init__(self)
+        self._drawer.prep_board()
         for pilegroup in [self._tableaus, self._foundations, [self._deck], [self._waste]]:
             for pile in pilegroup:
                 l = list(pile)
                 l.reverse()
-                self.__drawer.draw(l)
+                self._drawer.draw(l)
 
     def shuffle(self):
         import random
@@ -74,7 +75,6 @@ class Game:
             if foundation.get_length() < 13:
                 full_foundations = False
         return full_foundations
-
 
     def move_card(self, card, stack):
         stack.push(card)
@@ -119,3 +119,6 @@ class Game:
                     if self._tableaus[j].top.is_revealed():
                         valid_moves.append(self._tableaus[j])
         return valid_moves
+
+    def get_dict(self):
+        return self.__dict__
