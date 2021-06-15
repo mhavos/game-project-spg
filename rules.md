@@ -4,7 +4,7 @@ Po začatí novej hry sa karty rozdajú do ôsmych kôpok, a ostane päť prázd
 
 V ľavom hornom rohu sa nachádza Deck, kde sú uložené všetky prebytočné karty.
 
-Napravo od nej sa nachádza Waste, na ktorý môžeme prevracať karty z Decku, a potom nimi manipulovať. <br>
+Napravo od neho sa nachádza Waste, na ktorý môžeme prevracať karty z Decku, a potom nimi manipulovať. <br>
 Kliknutím na Deck prevrátime jeho vrchnú kartu do Waste. <br>
 Keď sa Deck minie, resetneme ho kliknutím na jeho prázdne políčko.
 

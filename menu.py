@@ -19,7 +19,9 @@ def menu():
             game2.start()
 
     def open_rules():
-        os.system("rules.md")
+        pass
+        try:
+            os.system("rules.pdf")
 
     menu_canvas = tkinter.Canvas(menu_window, width=300, height=300, bg="#008000")
     menu_canvas.pack()
@@ -31,7 +33,7 @@ def menu():
         button0.place(x=95, y=130)
     button1 = tkinter.Button(menu_window, text="New Game", width=15, command=lambda: start(False))
     button1.place(x=95, y=160)
-    button2 = tkinter.Button(menu_window, width=15, text="Rules", command=lambda: os.system("rules.md"))
+    button2 = tkinter.Button(menu_window, width=15, text="Rules", command=lambda: open_rules())
     button2.place(x=95, y=190)
     button3 = tkinter.Button(menu_window, width= 15, text="Close", command=lambda: menu_window.destroy())
     button3.place(x=95, y=220)
