@@ -19,9 +19,7 @@ def menu():
             game2.start()
 
     def open_rules():
-        pass
-        try:
-            os.system("rules.pdf")
+        os.system("rules.pdf")
 
     menu_canvas = tkinter.Canvas(menu_window, width=300, height=300, bg="#008000")
     menu_canvas.pack()
