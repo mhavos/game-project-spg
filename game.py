@@ -4,7 +4,7 @@ import card as cardclass
 
 class Game:
     def __init__(self):
-        # create the piles as stacks
+        # vytvorenie stackov - kopok
         self._deck = Stack()
         self._waste = Stack()
         self._foundations = []
@@ -17,6 +17,7 @@ class Game:
         self._drawer = Drawer(self)
 
     def init(self):
+        # vytvori novu hru
         v, h = self.shuffle()
         self._drawer.prep_board()
         self._drawer.draw(v[:7], shadow=None)
@@ -24,10 +25,11 @@ class Game:
         self._drawer.draw(h, shadow=None)
 
     def start(self):
+        # spusti mainloop
         self._drawer.start()
 
     def init_drawer(self):
-        # self._drawer.__init__(self)
+        # loadne hru
         self._drawer.prep_board()
         for pilegroup in [self._tableaus, self._foundations, [self._deck], [self._waste]]:
             for pile in pilegroup:
@@ -36,6 +38,7 @@ class Game:
                 self._drawer.draw(l)
 
     def shuffle(self):
+        # rozda karty
         import random
         l = []
         # vygeneruj karty
@@ -70,6 +73,7 @@ class Game:
         return l[:i], l[i:]
 
     def check_win(self):
+        # skontroluj, ci je hra vyhrata
         full_foundations = True
         for foundation in self._foundations:
             if foundation.get_length() < 13:
@@ -77,44 +81,46 @@ class Game:
         return full_foundations
 
     def move_card(self, card, stack):
+        # presunut kartu do ineho stacku
         stack.push(card)
         card._location.pop()
         card.set_location(stack)
 
     def deck_to_waste(self):
-        # turn a card over from deck to waste
+        # prevratit kartu z deck do waste
         self._waste.push(self._deck.top)
         self._deck.pop()
         self._waste.top.reveal()
 
 
     def list_valid_moves(self, card):
+        # najde a vrati vsetky miesta, kde sa da polozit karta
         valid_moves = []
         if not card:
             return valid_moves
 
-        # check available foundation spots
+        # najdi vhodne miesta vo foundations
         for i in range(4):
-            # if your card is an ace - there is a guaranteed empty spot, or if your card matches in suit and is 1 larger
+            # ak karta je A a stack je prazdny, alebo ak karta je rovnaky znak a o 1 vacsia ako top stacku
             if self._foundations[i].top == None:
                 if card.get_rank() == 1:
                     valid_moves.append(self._foundations[i])
                     break
-            # foundations can be built up by suits
+            # na foundations sa vklada vzostupne vramci znaku,
             elif self._foundations[i].top.get_suit() == card.get_suit() and self._foundations[i].top.get_rank() == card.get_rank() - 1:
                 if self._foundations[i].get_length() < 13:
                     valid_moves.append(self._foundations[i])
                     break
 
-        # check available tableau spots
+        # najdi vhodne miesta na tableau
         for j in range(7):
-            # a king can be placed on an empty spot
+            # kral moze byt vlozeny na prazdne miesto
             if self._tableaus[j].top == None:
                 if card.get_rank() == 13:
                     valid_moves.append(self._tableaus[j])
-            # tableaus can be built down in alternating colors
+            # na tableus sa vklada zostupne po striedavych farbach
             elif card.get_color_name() != self._tableaus[j].top.get_color_name() and self._tableaus[j].top.get_rank() == card.get_rank() + 1:
-                # upper limit for cards on a single foundation - so that they don't go off-screen
+                # vrchny limit pre pocet kariet na tableaus
                 if self._tableaus[j].get_length() < 13:
                     if self._tableaus[j].top.is_revealed():
                         valid_moves.append(self._tableaus[j])

@@ -28,6 +28,7 @@ class Drawer:
         photos()
 
         def back_to_menu(saved_game):
+            # vratenie do menu a ukladanie hry
             self.__window.destroy()
             import menu as m
             import os

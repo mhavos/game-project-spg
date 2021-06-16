@@ -1,4 +1,5 @@
 class Stack:
+    # miesta pre karty v stacku
     class Container:
         def __init__(self, content=None, next=None):
             self.content = content
@@ -10,6 +11,7 @@ class Stack:
         self._length = 0
         self.name = name
 
+    # pozrie ci je stack prazdny
     def is_empty(self):
         if not self.__top:
             return True
